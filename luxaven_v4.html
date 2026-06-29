@@ -1,0 +1,797 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;max-width:100%}
+:root{--red:#c0392b;--red2:#e74c3c;--red3:#ff6b6b;--dark:#080808;--dark2:#101010;--dark3:#181818;--dark4:#202020;--txt:#fff;--txt2:#bbb;--txt3:#666}
+html,body{background:#080808 !important;color:var(--txt);font-family:'Inter',sans-serif;overflow-x:hidden;margin:0 !important;padding:0 !important;}
+
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.95);border-bottom:1px solid #1a1a1a;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;backdrop-filter:blur(10px)}
+.logo-wrap{display:flex;align-items:center;gap:14px}
+.logo-img{height:48px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(192,57,43,.3)) brightness(10)}
+.logo-txt{display:flex;flex-direction:column}
+.logo-name{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;line-height:1;color:#fff}
+.logo-name span{color:var(--red)}
+.logo-sub{font-size:9px;letter-spacing:3px;color:#555;text-transform:uppercase;margin-top:1px}
+.nav-links{display:flex;gap:28px;align-items:center}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-phone{display:none}
+  nav{padding:0 16px}
+  .hero-h{font-size:42px}
+  .search-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .fleet-section{padding:32px 16px 0}
+  .trust-bar{gap:16px;padding:12px 16px}
+  .search-section{padding:20px 16px}
+}
+.nav-links a{color:#888;font-size:13px;text-decoration:none;letter-spacing:.5px;cursor:pointer;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-right{display:flex;align-items:center;gap:14px}
+.nav-phone{color:var(--red2);font-size:13px;font-weight:500;display:flex;align-items:center;gap:5px}
+.nav-cta{background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;letter-spacing:.5px;transition:background .2s}
+.nav-cta:hover{background:var(--red2)}
+
+.hero{position:relative;height:600px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hero-bg{position:absolute;inset:0;background:var(--dark)}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6;z-index:0}
+.hero-anim{position:absolute;inset:0;overflow:hidden}
+.hero-anim canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;background:rgba(8,8,8,.6)}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 24px}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(192,57,43,.12);border:0.5px solid rgba(192,57,43,.3);border-radius:20px;padding:6px 16px;font-size:11px;color:var(--red3);margin-bottom:20px;letter-spacing:1px;text-transform:uppercase}
+.hero-h{font-family:'Bebas Neue',sans-serif;font-size:72px;line-height:.95;margin-bottom:16px;letter-spacing:2px}
+.hero-h span{color:var(--red)}
+.hero-sub{color:#aaa;font-size:15px;margin-bottom:32px;line-height:1.7;max-width:480px;margin-left:auto;margin-right:auto}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-red{background:var(--red);color:#fff;border:none;padding:13px 28px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px}
+.btn-red:hover{background:var(--red2);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2);padding:13px 28px;border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px}
+.btn-outline:hover{border-color:#fff;transform:translateY(-1px)}
+.hero-scroll{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:#555;font-size:11px;letter-spacing:1px;text-transform:uppercase;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+.wave-divider{position:relative;height:80px;overflow:hidden;background:var(--dark)}
+.wave-divider svg{position:absolute;bottom:0;width:100%}
+
+.search-section{background:var(--dark2);padding:28px 32px;border-bottom:1px solid #1a1a1a}
+.search-inner{max-width:900px;margin:0 auto}
+.search-title{font-size:13px;color:#666;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.search-title::after{content:'';flex:1;height:0.5px;background:#1e1e1e}
+.search-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+@media(max-width:768px){
+  .search-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .search-btn{width:100%;justify-content:center}
+}
+.sg label{font-size:10px;color:#666;display:block;margin-bottom:5px;letter-spacing:1px;text-transform:uppercase}
+.sg input,.sg select{background:#111;border:1px solid #222;color:#fff;padding:11px 13px;border-radius:8px;font-size:13px;width:100%;font-family:'Inter',sans-serif}
+.sg input:focus,.sg select:focus{outline:none;border-color:var(--red)}
+.sg select option{background:#111}
+.search-btn{background:var(--red);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:7px;transition:background .2s;margin:0 auto}
+.search-btn:hover{background:var(--red2)}
+
+.trust-bar{background:var(--dark);padding:16px 32px;border-bottom:1px solid #111;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+.ti{display:flex;align-items:center;gap:8px;color:#777;font-size:12px;letter-spacing:.3px}
+.ti i{color:var(--red);font-size:16px}
+
+.fleet-section{padding:48px 32px 0}
+.sec-header{text-align:center;margin-bottom:32px}
+.sec-label{color:var(--red2);font-size:11px;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:2px;margin-bottom:10px}
+.sec-sub{color:#777;font-size:14px;line-height:1.7}
+
+.filters{display:flex;gap:8px;justify-content:center;margin-bottom:32px;flex-wrap:wrap}
+.fb{border:1px solid #222;background:transparent;padding:8px 18px;border-radius:20px;font-size:12px;cursor:pointer;color:#777;letter-spacing:.5px;transition:all .2s;font-family:'Inter',sans-serif}
+.fb:hover{border-color:#444;color:#ccc}
+.fb.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:500}
+
+.car-search-bar{display:flex;gap:10px;justify-content:center;margin-bottom:28px}
+.car-search-inp{background:#111;border:1px solid #222;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;width:280px;font-family:'Inter',sans-serif}
+.car-search-inp:focus{outline:none;border-color:var(--red)}
+.car-search-inp::placeholder{color:#444}
+
+.carousel-outer{overflow:hidden;padding:10px 0 32px;margin:0 -32px;position:relative}
+.carousel-outer::before,.carousel-outer::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
+.carousel-outer::before{left:0;background:linear-gradient(to right,var(--dark),transparent)}
+.carousel-outer::after{right:0;background:linear-gradient(to left,var(--dark),transparent)}
+.carousel-track{display:flex;gap:18px;padding:8px 48px;cursor:grab;user-select:none;transition:transform .45s cubic-bezier(.22,1,.36,1);-webkit-overflow-scrolling:touch}
+@media(max-width:768px){
+  .carousel-track{padding:8px 16px;gap:12px}
+  .carousel-outer{margin:0 -16px;touch-action:pan-x}
+  .car-card{min-width:80vw}
+}
+.carousel-track.dragging{cursor:grabbing;transition:none}
+
+.car-card{flex:0 0 240px;background:var(--dark3);border-radius:16px;overflow:hidden;border:1px solid #222;transition:all .4s cubic-bezier(.22,1,.36,1);cursor:pointer;position:relative}
+.car-card:hover{flex:0 0 300px;border-color:var(--red);transform:translateY(-4px)}
+.car-card.expanded{flex:0 0 320px;border-color:var(--red);border-width:1.5px;transform:translateY(-6px)}
+.card-img{height:170px;background:#0f0f0f;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease,opacity .3s;opacity:.85}
+.car-card:hover .card-img img,.car-card.expanded .card-img img{transform:scale(1.07);opacity:1}
+.card-img-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,#1a0808 0%,#080808 70%);opacity:0}
+.car-card:hover .card-img-bg,.car-card.expanded .card-img-bg{opacity:1;transition:opacity .4s}
+.card-img i{font-size:80px;color:#1e1e1e;transition:all .4s;position:relative;z-index:1}
+.car-card:hover .card-img i,.car-card.expanded .card-img i{font-size:92px;color:#2a1010}
+.card-avail{position:absolute;top:10px;left:10px;font-size:10px;padding:4px 10px;border-radius:20px;font-weight:500;letter-spacing:.5px;z-index:2}
+.av{background:rgba(46,213,115,.1);color:#2ed573;border:0.5px solid rgba(46,213,115,.25)}
+.na{background:rgba(255,71,87,.1);color:#ff4757;border:0.5px solid rgba(255,71,87,.25)}
+.card-price{position:absolute;bottom:10px;right:10px;background:var(--red);color:#fff;font-size:12px;font-weight:600;padding:5px 11px;border-radius:7px;z-index:2}
+.card-body{padding:16px}
+.card-name{font-size:15px;font-weight:500;margin-bottom:2px}
+.card-year{font-size:11px;color:#555;margin-bottom:8px;letter-spacing:.5px}
+.card-stars{display:flex;align-items:center;gap:3px;margin-bottom:8px}
+.card-stars i{font-size:12px;color:var(--red2)}
+.card-stars span{font-size:11px;color:#555;margin-left:4px}
+.card-pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.pill{font-size:10px;padding:3px 9px;border-radius:20px;background:#111;color:#777;border:0.5px solid #222;letter-spacing:.3px}
+.card-desc{font-size:12px;color:#777;line-height:1.65;margin-bottom:12px;display:none;animation:fadeIn .3s ease}
+.car-card:hover .card-desc,.car-card.expanded .card-desc{display:block}
+.card-btn{width:100%;background:var(--red);color:#fff;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:none;animation:fadeIn .3s ease;font-family:'Inter',sans-serif;transition:background .2s}
+.card-btn:hover{background:var(--red2)}
+.car-card:hover .card-btn,.car-card.expanded .card-btn{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+.carousel-dots{display:flex;justify-content:center;gap:6px;padding:0 0 24px}
+.cdot{width:5px;height:5px;border-radius:50%;background:#222;cursor:pointer;transition:all .25s}
+.cdot.on{width:20px;border-radius:3px;background:var(--red)}
+
+.wave-section{position:relative;height:100px;overflow:hidden}
+
+.detail-view{display:none;padding:32px;background:var(--dark);min-height:400px}
+.detail-view.on{display:block}
+.det-back{display:inline-flex;align-items:center;gap:6px;color:#666;font-size:13px;cursor:pointer;margin-bottom:24px;padding:8px 16px;border:1px solid #222;border-radius:8px;transition:all .2s}
+.det-back:hover{color:var(--red2);border-color:var(--red)}
+.det-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:28px}
+.gal-main{background:#0f0f0f;border-radius:14px;height:220px;display:flex;align-items:center;justify-content:center;border:1px solid #1e1e1e;position:relative;margin-bottom:10px;overflow:hidden}
+.gal-main i{font-size:100px;color:#1a1a1a}
+.gal-counter{position:absolute;bottom:12px;right:14px;background:rgba(0,0,0,.75);color:#888;font-size:11px;padding:4px 10px;border-radius:6px}
+.gal-thumbs{display:flex;gap:8px}
+.gth{flex:1;height:52px;background:#0f0f0f;border-radius:8px;border:1px solid #1e1e1e;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s}
+.gth:hover,.gth.on{border-color:var(--red)}
+.gth i{font-size:20px;color:#2a2a2a}
+.det-name{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;margin-bottom:3px}
+.det-meta{font-size:12px;color:#555;margin-bottom:10px;letter-spacing:.5px}
+.det-stars{display:flex;align-items:center;gap:3px;margin-bottom:10px}
+.det-stars i{font-size:15px;color:var(--red2)}
+.det-stars span{font-size:12px;color:#666;margin-left:5px}
+.det-price{font-size:30px;font-weight:300;color:var(--red);margin-bottom:5px;font-family:'Bebas Neue',sans-serif;letter-spacing:1px}
+.det-price span{font-size:14px;color:#555;font-family:'Inter',sans-serif;font-weight:400}
+.det-avail{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 14px;border-radius:20px;margin-bottom:16px}
+.specs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.spec-box{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:10px 8px;text-align:center}
+.spec-icon{font-size:20px;color:var(--red);margin-bottom:4px}
+.spec-val{font-size:12px;font-weight:500}
+.spec-lbl{font-size:9px;color:#444;margin-top:2px;text-transform:uppercase;letter-spacing:.8px}
+.det-desc-txt{font-size:13px;color:#888;line-height:1.75;margin-bottom:14px}
+.det-feats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:16px}
+.feat{display:flex;align-items:center;gap:7px;font-size:12px;color:#888}
+.feat i{color:var(--red);font-size:14px}
+
+.res-form{background:var(--dark3);border:1px solid #1e1e1e;border-radius:14px;padding:20px;margin-bottom:24px}
+.res-form h3{font-size:13px;font-weight:500;margin-bottom:16px;display:flex;align-items:center;gap:7px;letter-spacing:.5px;text-transform:uppercase;color:#ccc}
+.res-form h3 i{color:var(--red)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:10px;color:#666;font-weight:500;text-transform:uppercase;letter-spacing:.8px}
+.fg input,.fg select{background:#111;border:1px solid #222;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;transition:border-color .2s}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--red)}
+.notice{background:rgba(192,57,43,.06);border:0.5px solid rgba(192,57,43,.2);border-radius:8px;padding:10px 13px;font-size:12px;color:#c08080;display:flex;align-items:flex-start;gap:8px;margin-bottom:12px;line-height:1.6}
+.summary{background:#0f0f0f;border-radius:8px;padding:13px;margin-bottom:12px}
+.sum-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:#777}
+.sum-row.tot{font-weight:500;color:#fff;border-top:0.5px solid #1e1e1e;margin-top:6px;padding-top:8px;font-size:14px}
+.submit-btn{width:100%;background:var(--red);color:#fff;border:none;padding:13px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:.5px;font-family:'Inter',sans-serif;transition:background .2s}
+.submit-btn:hover{background:var(--red2)}
+
+.reviews-section{padding:0 32px 32px}
+.rev-list{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.rev-item{background:var(--dark3);border:1px solid #1e1e1e;border-radius:12px;padding:14px 16px;transition:border-color .2s}
+.rev-item:hover{border-color:#2a2a2a}
+.rev-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.rev-auth{display:flex;align-items:center;gap:10px}
+.rev-av{width:32px;height:32px;border-radius:50%;background:rgba(192,57,43,.1);border:0.5px solid rgba(192,57,43,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--red2)}
+.rev-name{font-size:13px;font-weight:500}
+.rev-date{font-size:11px;color:#444}
+.rev-stars{display:flex;gap:2px}
+.rev-stars i{font-size:12px;color:var(--red2)}
+.rev-text{font-size:13px;color:#888;line-height:1.6}
+.review-form{background:var(--dark3);border:1px solid #1e1e1e;border-radius:14px;padding:18px}
+.review-form p{font-size:12px;color:#666;margin-bottom:12px;letter-spacing:.3px}
+.star-row{display:flex;gap:5px;margin-bottom:12px}
+.star-row i{font-size:24px;color:#1e1e1e;cursor:pointer;transition:color .15s}
+.star-row i.on{color:var(--red2)}
+.rinp{width:100%;background:#111;border:1px solid #1e1e1e;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;margin-bottom:8px;font-family:'Inter',sans-serif;transition:border-color .2s}
+.rinp:focus{outline:none;border-color:var(--red)}
+.rinp::placeholder{color:#333}
+.rta{width:100%;background:#111;border:1px solid #1e1e1e;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;resize:none;height:72px;font-family:'Inter',sans-serif;transition:border-color .2s}
+.rta:focus{outline:none;border-color:var(--red)}
+.rta::placeholder{color:#333}
+.rev-submit{background:var(--red);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;margin-top:10px;font-family:'Inter',sans-serif;transition:background .2s}
+.rev-submit:hover{background:var(--red2)}
+
+.location-section{padding:40px 32px;background:var(--dark2);border-top:1px solid #111}
+.loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;max-width:900px;margin:0 auto}
+.loc-map{background:#111;border-radius:14px;height:220px;border:1px solid #1e1e1e;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.loc-map::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,#1a0808,#080808)}
+.loc-map i{font-size:40px;color:var(--red);position:relative;z-index:1}
+.loc-info{display:flex;flex-direction:column;gap:14px}
+.loc-item{display:flex;align-items:flex-start;gap:12px}
+.loc-icon{width:36px;height:36px;background:rgba(192,57,43,.1);border:0.5px solid rgba(192,57,43,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.loc-icon i{font-size:17px;color:var(--red2)}
+.loc-label{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.loc-val{font-size:14px;color:#ccc;line-height:1.5}
+.loc-map-btn{background:var(--red);color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .2s;font-family:'Inter',sans-serif;margin-top:6px;width:fit-content}
+.loc-map-btn:hover{background:var(--red2)}
+
+footer{background:#050505;border-top:1px solid #111;padding:32px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px}
+.foot-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:8px}
+.foot-logo span{color:var(--red)}
+.foot-desc{font-size:12px;color:#555;line-height:1.7;margin-bottom:14px}
+.foot-social{display:flex;gap:8px}
+.soc-btn{width:34px;height:34px;border:1px solid #1e1e1e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:#666;font-size:16px}
+.soc-btn:hover{border-color:var(--red);color:var(--red2)}
+.foot-col h4{font-size:11px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.foot-col a{display:block;color:#666;font-size:13px;margin-bottom:8px;text-decoration:none;cursor:pointer;transition:color .2s}
+.foot-col a:hover{color:var(--red2)}
+.foot-bottom{background:#030303;border-top:1px solid #0d0d0d;padding:14px 32px;display:flex;justify-content:space-between;align-items:center}
+.foot-bottom p{font-size:12px;color:#333}
+.foot-bottom span{font-size:12px;color:#333}
+
+.confirm-view{display:none;padding:60px 32px;text-align:center}
+.confirm-view.on{display:block}
+.conf-icon{width:70px;height:70px;border-radius:50%;background:rgba(46,213,115,.08);border:1px solid rgba(46,213,115,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.conf-icon i{font-size:32px;color:#2ed573}
+.conf-h{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;margin-bottom:10px}
+.conf-sub{font-size:14px;color:#888;line-height:1.7;margin-bottom:20px;max-width:400px;margin-left:auto;margin-right:auto}
+.conf-ref{background:#111;border:1px solid #222;border-radius:8px;padding:12px 20px;font-size:14px;display:inline-block;margin-bottom:24px;color:#ccc}
+.conf-ref strong{color:var(--red2)}
+.back-btn{border:1px solid #222;background:transparent;padding:11px 26px;border-radius:8px;font-size:13px;cursor:pointer;color:#888;font-family:'Inter',sans-serif;transition:all .2s}
+.back-btn:hover{border-color:var(--red);color:var(--red2)}
+</style>
+</head>
+<body>
+
+<h2 class="sr-only">Luxaven Rent a Car — site officiel Rabat</h2>
+
+<nav>
+  <div class="logo-wrap">
+<img src="1782737847021_image.png" style="height:60px;width:auto;filter:drop-shadow(0 0 8px rgba(192,57,43,.5));">
+  </div>
+  <div class="nav-links">
+    <a onclick="scrollTo(0,0)">Accueil</a>
+    <a onclick="document.getElementById('fleet').scrollIntoView({behavior:'smooth'})">Flotte</a>
+    <a onclick="document.getElementById('loc').scrollIntoView({behavior:'smooth'})">Localisation</a>
+    <a onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-phone"><i class="ti ti-phone" style="font-size:14px" aria-hidden="true"></i> 06 61 47 25 59</div>
+    <button class="nav-cta" onclick="document.getElementById('fleet').scrollIntoView({behavior:'smooth'})">Réserver</button>
+  </div>
+</nav>
+
+<div class="hero" id="hero-top">
+  <div class="hero-bg" style="display:none"></div>
+<video class="hero-video" autoplay muted loop playsinline>
+  <source src="https://www.pexels.com/fr-fr/download/video/16244861/" type="video/mp4"> type="video/mp4"> type="video/mp4">
+</video>
+  <video class="hero-video" autoplay muted loop playsinline poster="">
+    <source src="https://cdn.coverr.co/videos/coverr-car-driving-on-highway-at-night-4319/1080p.mp4" type="video/mp4">
+    <source src="https://assets.mixkit.co/videos/preview/mixkit-man-driving-a-luxury-car-on-a-highway-34738-large.mp4" type="video/mp4">
+  </video>
+  <div class="hero-anim"><canvas id="wc"></canvas></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag"><i class="ti ti-map-pin" style="font-size:12px" aria-hidden="true"></i> Rabat Agdal · MAG N°10, AV Hassan II</div>
+    <div class="hero-h">LOCATION<br>DE <span>VOITURES</span><br>PREMIUM</div>
+    <div class="hero-sub">Véhicules récents, assurés et entretenus. Réservez en ligne — livraison à votre adresse ou retrait à l'agence.</div>
+    <div class="hero-btns">
+      <button class="btn-red" onclick="document.getElementById('fleet').scrollIntoView({behavior:'smooth'})"><i class="ti ti-car" style="font-size:16px" aria-hidden="true"></i> Voir la flotte</button>
+      <button class="btn-outline" onclick="document.getElementById('loc').scrollIntoView({behavior:'smooth'})"><i class="ti ti-map-pin" style="font-size:16px" aria-hidden="true"></i> Nous trouver</button>
+    </div>
+  </div>
+  <div class="hero-scroll"><i class="ti ti-chevron-down" style="font-size:20px" aria-hidden="true"></i><span>Défiler</span></div>
+</div>
+
+<div class="search-section">
+  <div class="search-inner">
+    <div class="search-title">Trouver votre véhicule</div>
+    <div class="search-grid">
+      <div class="sg"><label>Date départ</label><input type="date" id="s-from"></div>
+      <div class="sg"><label>Date retour</label><input type="date" id="s-to"></div>
+      <div class="sg"><label>Catégorie</label><select id="s-cat"><option value="">Toutes catégories</option><option>Citadine</option><option>SUV</option><option>Berline</option><option>Break</option></select></div>
+      <div class="sg"><label>Modèle</label><input type="text" id="s-model" placeholder="ex: Clio, Duster…"></div>
+      <button class="search-btn" onclick="runSearch()"><i class="ti ti-search" style="font-size:14px" aria-hidden="true"></i> Rechercher</button>
+    </div>
+  </div>
+</div>
+
+<div class="trust-bar">
+  <div class="ti"><i class="ti ti-shield-check" aria-hidden="true"></i> Assurance complète</div>
+  <div class="ti"><i class="ti ti-clock" aria-hidden="true"></i> Assistance 24h/7j</div>
+  <div class="ti"><i class="ti ti-receipt-off" aria-hidden="true"></i> Sans frais cachés</div>
+  <div class="ti"><i class="ti ti-truck-delivery" aria-hidden="true"></i> Livraison Rabat</div>
+  <div class="ti"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i> Confirmation WhatsApp</div>
+  <div class="ti"><i class="ti ti-star" aria-hidden="true"></i> Note 5.0 Google</div>
+</div>
+
+<div class="fleet-section" id="fleet">
+  <div class="sec-header">
+    <div class="sec-label">Notre flotte</div>
+    <div class="sec-title">CHOISISSEZ VOTRE VÉHICULE</div>
+    <div class="sec-sub">Tous nos véhicules sont récents, propres et régulièrement entretenus</div>
+  </div>
+
+  <div class="filters" id="filt">
+    <button class="fb on" data-f="all">Tous</button>
+    <button class="fb" data-f="citadine">Citadine</button>
+    <button class="fb" data-f="suv">SUV</button>
+    <button class="fb" data-f="berline">Berline</button>
+    <button class="fb" data-f="disponible">Disponible</button>
+  </div>
+
+  <div class="carousel-outer">
+    <div class="carousel-track" id="ct">
+
+      <div class="car-card" data-cat="citadine" data-avail="true" data-price="600" data-i="0" onclick="window.location.href='car-detail.html?id=0'" style="cursor:pointer;">
+        <div class="card-img"><div class="card-img-bg"></div><img src="https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=400&q=80" alt="Renault Clio" loading="lazy" /><span class="card-avail av">Disponible</span><span class="card-price">600 MAD/j</span></div>
+        <div class="card-body">
+          <div class="card-name">Renault Clio</div><div class="card-year">2024 · Citadine · Automatique</div>
+          <div class="card-stars"><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star-half"></i><span>4.5</span></div>
+          <div class="card-pills"><span class="pill">5 places</span><span class="pill">Essence</span><span class="pill">Clim</span><span class="pill">GPS</span></div>
+          <div class="card-desc">Idéale pour la ville. Économique, facile à garer. Bluetooth, GPS et assurance inclus.</div>
+          <button class="card-btn" onclick="event.stopPropagation();window.location.href='car-detail.html?id=0'">Voir & Réserver →</button>
+        </div>
+      </div>
+
+      <div class="car-card" data-cat="suv" data-avail="true" data-price="500" data-i="1" onclick="window.location.href='car-detail.html?id=1'" style="cursor:pointer;">
+        <div class="card-img"><div class="card-img-bg"></div><img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=400&q=80" alt="Dacia Duster" loading="lazy" /><span class="card-avail av">Disponible</span><span class="card-price">500 MAD/j</span></div>
+        <div class="card-body">
+          <div class="card-name">Dacia Duster</div><div class="card-year">2023 · SUV · Manuelle</div>
+          <div class="card-stars"><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><span>5.0</span></div>
+          <div class="card-pills"><span class="pill">5 places</span><span class="pill">Diesel</span><span class="pill">4x4</span><span class="pill">Clim</span></div>
+          <div class="card-desc">Robuste et spacieuse. Idéale pour l'Atlas et les pistes. Notre voiture la plus demandée.</div>
+          <button class="card-btn" onclick="event.stopPropagation();window.location.href='car-detail.html?id=1'">Voir & Réserver →</button>
+        </div>
+      </div>
+
+      <div class="car-card" data-cat="citadine" data-avail="false" data-price="450" data-i="2" onclick="window.location.href='car-detail.html?id=2'" style="cursor:pointer;">
+        <div class="card-img"><div class="card-img-bg"></div><img src="https://images.unsplash.com/photo-1617531653332-bd46c16f7d5d?w=400&q=80" alt="Peugeot 208" loading="lazy" /><span class="card-avail na">Louée</span><span class="card-price">450 MAD/j</span></div>
+        <div class="card-body">
+          <div class="card-name">Peugeot 208</div><div class="card-year">2022 · Citadine · Automatique</div>
+          <div class="card-stars"><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><span>4.0</span></div>
+          <div class="card-pills"><span class="pill">5 places</span><span class="pill">Essence</span><span class="pill">Clim</span></div>
+          <div class="card-desc">Compacte et agile. Excellente visibilité, confort en ville. Très appréciée à Rabat.</div>
+          <button class="card-btn" onclick="event.stopPropagation();window.location.href='car-detail.html?id=2'">Voir détails →</button>
+        </div>
+      </div>
+
+      <div class="car-card" data-cat="berline" data-avail="true" data-price="750" data-i="3" onclick="window.location.href='car-detail.html?id=3'"style="cursor:pointer;">
+        <div class="card-img"><div class="card-img-bg"></div><img src="https://images.unsplash.com/photo-1471444928139-48c5bf5173f8?w=400&q=80" alt="Volkswagen Golf" loading="lazy" /><span class="card-avail av">Disponible</span><span class="card-price">750 MAD/j</span></div>
+        <div class="card-body">
+          <div class="card-name">Volkswagen Golf</div><div class="card-year">2023 · Berline · Automatique</div>
+          <div class="card-stars"><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star-half"></i><span>4.7</span></div>
+          <div class="card-pills"><span class="pill">5 places</span><span class="pill">Essence</span><span class="pill">Panorama</span><span class="pill">GPS</span></div>
+          <div class="card-desc">Berline premium silencieuse. Toit panoramique, sièges chauffants. Idéale pour voyages d'affaires.</div>
+          <button class="card-btn" onclick="event.stopPropagation();window.location.href='car-detail.html?id=3'">Voir & Réserver →</button>
+        </div>
+      </div>
+
+      <div class="car-card" data-cat="suv" data-avail="true" data-price="850" data-i="4" onclick="window.location.href='car-detail.html?id=4'" style="cursor:pointer;">
+        <div class="card-img"><div class="card-img-bg"></div><img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=400&q=80" alt="Hyundai Tucson" loading="lazy" /><span class="card-avail av">Disponible</span><span class="card-price">850 MAD/j</span></div>
+        <div class="card-body">
+          <div class="card-name">Hyundai Tucson</div><div class="card-year">2024 · SUV · Automatique</div>
+          <div class="card-stars"><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><span>4.3</span></div>
+          <div class="card-pills"><span class="pill">5 places</span><span class="pill">Diesel</span><span class="pill">4x4</span><span class="pill">Panorama</span></div>
+          <div class="card-desc">SUV moderne et confortable. Parfait pour familles et longs trajets. Équipement haut de gamme.</div>
+          <button class="card-btn" onclick="event.stopPropagation();window.location.href='car-detail.html?id=4'">Voir & Réserver →</button>
+        </div>
+      </div>
+
+      <div class="car-card" data-cat="citadine" data-avail="true" data-price="380" data-i="5" onclick="window.location.href='car-detail.html?id=5'" style="cursor:pointer;">
+        <div class="card-img"><div class="card-img-bg"></div><img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400&q=80" alt="Kia Picanto" loading="lazy" /><span class="card-avail av">Disponible</span><span class="card-price">380 MAD/j</span></div>
+        <div class="card-body">
+          <div class="card-name">Kia Picanto</div><div class="card-year">2024 · Citadine · Manuelle</div>
+          <div class="card-stars"><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><span>5.0</span></div>
+          <div class="card-pills"><span class="pill">4 places</span><span class="pill">Essence</span><span class="pill">Clim</span></div>
+          <div class="card-desc">Le meilleur rapport qualité/prix. Ultra-économique, parfaite pour Rabat et Salé.</div>
+          <button class="card-btn" onclick="event.stopPropagation();window.location.href='car-detail.html?id=5'">Voir & Réserver →</button>
+        </div>
+      </div>
+
+      <div class="car-card" data-cat="berline" data-avail="true" data-price="680" data-i="6" onclick="window.location.href='car-detail.html?id=6'" style="cursor:pointer;">
+        <div class="card-img"><div class="card-img-bg"></div><img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400&q=80" alt="Toyota Corolla" loading="lazy" /><span class="card-avail av">Disponible</span><span class="card-price">680 MAD/j</span></div>
+        <div class="card-body">
+          <div class="card-name">Toyota Corolla</div><div class="card-year">2023 · Berline · Automatique</div>
+          <div class="card-stars"><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star-half"></i><span>4.6</span></div>
+          <div class="card-pills"><span class="pill">5 places</span><span class="pill">Hybride</span><span class="pill">Clim</span><span class="pill">GPS</span></div>
+          <div class="card-desc">Fiabilité légendaire Toyota. Hybride, très faible conso. Confort et économie au rendez-vous.</div>
+          <button class="card-btn" onclick="event.stopPropagation();window.location.href='car-detail.html?id=6'">Voir & Réserver →</button>
+        </div>
+      </div>
+
+      <div class="car-card" data-cat="suv" data-avail="false" data-price="920" data-i="7" onclick="window.location.href='car-detail.html?id=7'" style="cursor:pointer;">
+        <div class="card-img"><div class="card-img-bg"></div><img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&q=80" alt="BMW X1" loading="lazy" /><span class="card-avail na">Louée</span><span class="card-price">920 MAD/j</span></div>
+        <div class="card-body">
+          <div class="card-name">BMW X1</div><div class="card-year">2023 · SUV Premium · Auto</div>
+          <div class="card-stars"><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><i class="ti ti-star"></i><span>5.0</span></div>
+          <div class="card-pills"><span class="pill">5 places</span><span class="pill">Essence</span><span class="pill">Premium</span><span class="pill">Cuir</span></div>
+          <div class="card-desc">Le summum du luxe. Intérieur cuir, technologie BMW ConnectedDrive. Pour les occasions exceptionnelles.</div>
+          <button class="card-btn" onclick="event.stopPropagation();window.location.href='car-detail.html?id=7'">Voir détails →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="carousel-dots" id="cdots"></div>
+</div>
+
+<div class="wave-section">
+  <canvas id="wv" style="width:100%;height:100px;display:block"></canvas>
+</div>
+
+<div class="detail-view" id="det">
+  <button class="det-back" onclick="closeDet()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Retour à la flotte</button>
+  <div class="det-layout">
+    <div>
+      <div class="gal-main" id="gal-main-wrap">
+        <img id="gal-main-img" src="" style="width:100%;height:100%;object-fit:cover;border-radius:14px;position:absolute;inset:0" alt="voiture" />
+        <div class="gal-counter" id="gal-count"><i class="ti ti-photo" style="font-size:11px" aria-hidden="true"></i> 1/4</div>
+      </div>
+      <div class="gal-thumbs" id="gal-thumbs-wrap">
+        <div class="gth on" onclick="setGalImg(0)"><img id="gth0" src="" style="width:100%;height:100%;object-fit:cover;border-radius:7px" /></div>
+        <div class="gth" onclick="setGalImg(1)"><img id="gth1" src="" style="width:100%;height:100%;object-fit:cover;border-radius:7px" /></div>
+        <div class="gth" onclick="setGalImg(2)"><img id="gth2" src="" style="width:100%;height:100%;object-fit:cover;border-radius:7px" /></div>
+        <div class="gth" onclick="setGalImg(3)"><img id="gth3" src="" style="width:100%;height:100%;object-fit:cover;border-radius:7px" /></div>
+      </div>
+      <div class="reviews-section" style="padding:20px 0 0">
+        <div style="font-size:11px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px">Avis clients <span style="flex:1;height:0.5px;background:#1a1a1a;display:block"></span></div>
+        <div class="rev-list" id="rl">
+          <div class="rev-item"><div class="rev-head"><div class="rev-auth"><div class="rev-av">YB</div><div><div class="rev-name">Youssef B.</div><div class="rev-date">Juin 2026</div></div></div><div class="rev-stars"><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i></div></div><div class="rev-text">Voiture impeccable, livrée à l'heure. Rabat–Chefchaouen sans aucun problème. Service très pro !</div></div>
+          <div class="rev-item"><div class="rev-head"><div class="rev-auth"><div class="rev-av">SM</div><div><div class="rev-name">Sara M.</div><div class="rev-date">Mai 2026</div></div></div><div class="rev-stars"><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i></div></div><div class="rev-text">Très bon rapport qualité-prix. Livraison ponctuelle à mon hôtel. Je reviendrai.</div></div>
+        </div>
+        <div class="review-form">
+          <p>Laissez votre avis sur ce véhicule</p>
+          <div class="star-row" id="sr"><i class="ti ti-star" data-v="1" aria-hidden="true"></i><i class="ti ti-star" data-v="2" aria-hidden="true"></i><i class="ti ti-star" data-v="3" aria-hidden="true"></i><i class="ti ti-star" data-v="4" aria-hidden="true"></i><i class="ti ti-star" data-v="5" aria-hidden="true"></i></div>
+          <input class="rinp" type="text" placeholder="Votre prénom">
+          <textarea class="rta" placeholder="Votre expérience…"></textarea>
+          <button class="rev-submit" onclick="postRev(this)">Publier l'avis</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="det-name" id="dn">Renault Clio 2024</div>
+      <div class="det-meta" id="dm">Citadine · Automatique · Essence</div>
+      <div class="det-stars"><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star" aria-hidden="true"></i><i class="ti ti-star-half" aria-hidden="true"></i><span id="drt">4.5 · 12 avis</span></div>
+      <div class="det-price" id="dp">600 MAD <span>/ jour</span></div>
+      <div class="det-avail av" id="da"><i class="ti ti-circle-check" style="font-size:13px" aria-hidden="true"></i> Disponible maintenant</div>
+      <div class="specs-grid">
+        <div class="spec-box"><div class="spec-icon"><i class="ti ti-manual-gearbox" aria-hidden="true"></i></div><div class="spec-val" id="dtr">Auto</div><div class="spec-lbl">Boîte</div></div>
+        <div class="spec-box"><div class="spec-icon"><i class="ti ti-users" aria-hidden="true"></i></div><div class="spec-val" id="dse">5 places</div><div class="spec-lbl">Places</div></div>
+        <div class="spec-box"><div class="spec-icon"><i class="ti ti-droplet" aria-hidden="true"></i></div><div class="spec-val" id="dfu">Essence</div><div class="spec-lbl">Carburant</div></div>
+        <div class="spec-box"><div class="spec-icon"><i class="ti ti-briefcase" aria-hidden="true"></i></div><div class="spec-val">2 sacs</div><div class="spec-lbl">Bagages</div></div>
+      </div>
+      <div class="det-desc-txt" id="dde">Description du véhicule.</div>
+      <div class="det-feats">
+        <div class="feat"><i class="ti ti-circle-check" aria-hidden="true"></i> Assurance complète</div>
+        <div class="feat"><i class="ti ti-circle-check" aria-hidden="true"></i> GPS inclus</div>
+        <div class="feat"><i class="ti ti-circle-check" aria-hidden="true"></i> Livraison Rabat gratuite</div>
+        <div class="feat"><i class="ti ti-circle-check" aria-hidden="true"></i> Assistance 24h/7j</div>
+        <div class="feat"><i class="ti ti-circle-check" aria-hidden="true"></i> Plein au départ</div>
+        <div class="feat"><i class="ti ti-circle-check" aria-hidden="true"></i> Kilométrage illimité</div>
+      </div>
+      <div class="res-form">
+        <h3><i class="ti ti-calendar-event" aria-hidden="true"></i> Réserver ce véhicule</h3>
+        <div class="form-row">
+          <div class="fg"><label>Date départ</label><input type="date" id="rf" onchange="calcT()"></div>
+          <div class="fg"><label>Date retour</label><input type="date" id="rt" onchange="calcT()"></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>Nom complet</label><input type="text" placeholder="Votre nom"></div>
+          <div class="fg"><label>Téléphone / WhatsApp</label><input type="text" placeholder="+212 6XX XXX XXX"></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>Email</label><input type="email" placeholder="email@exemple.com"></div>
+          <div class="fg"><label>CIN ou Passeport</label><input type="text" placeholder="AB123456"></div>
+        </div>
+        <div class="notice"><i class="ti ti-info-circle" style="font-size:16px;flex-shrink:0" aria-hidden="true"></i> Paiement à l'agence ou à la livraison. Nous confirmons votre réservation par appel ou WhatsApp dans l'heure.</div>
+        <div class="summary">
+          <div class="sum-row"><span id="scar">Renault Clio 2024</span><span id="srate">600 MAD/j</span></div>
+          <div class="sum-row"><span>Durée</span><span id="sdur">— jours</span></div>
+          <div class="sum-row"><span>Livraison</span><span>Gratuite</span></div>
+          <div class="sum-row tot"><span>Total estimé</span><span id="stot">—</span></div>
+        </div>
+        <button class="submit-btn" onclick="doConfirm()"><i class="ti ti-check" style="font-size:16px" aria-hidden="true"></i> Confirmer la réservation</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-view" id="conf">
+  <div class="conf-icon"><i class="ti ti-check" aria-hidden="true"></i></div>
+  <div class="conf-h">DEMANDE ENVOYÉE</div>
+  <div class="conf-sub">Merci ! L'équipe Luxaven vous contactera dans l'heure par appel ou WhatsApp pour confirmer et organiser la remise des clés.</div>
+  <div class="conf-ref">Référence : <strong>#LUX-2026-<span id="cref">0031</span></strong></div><br>
+  <button class="back-btn" onclick="goHome()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Retour à l'accueil</button>
+</div>
+
+<div style="width:100%;height:2px;background:linear-gradient(to right,transparent,var(--red),transparent)"></div>
+
+<div class="location-section" id="loc">
+  <div class="sec-header" style="margin-bottom:28px">
+    <div class="sec-label">Où nous trouver</div>
+    <div class="sec-title">NOTRE AGENCE</div>
+  </div>
+  <div class="loc-grid">
+    <div class="loc-map">
+      <i class="ti ti-map-pin" aria-hidden="true"></i>
+    </div>
+    <div class="loc-info">
+      <div class="loc-item"><div class="loc-icon"><i class="ti ti-map-pin" aria-hidden="true"></i></div><div><div class="loc-label">Adresse</div><div class="loc-val">MAG N°10, AV Hassan II<br>Résidence Ahssandar 2<br>Rabat Agdal 10090</div></div></div>
+      <div class="loc-item"><div class="loc-icon"><i class="ti ti-phone" aria-hidden="true"></i></div><div><div class="loc-label">Téléphone</div><div class="loc-val">06 61 47 25 59<br>+212 718 998 998</div></div></div>
+      <div class="loc-item"><div class="loc-icon"><i class="ti ti-clock" aria-hidden="true"></i></div><div><div class="loc-label">Horaires</div><div class="loc-val">Lun–Sam : 8h00 – 19h00<br>Dimanche : sur rendez-vous</div></div></div>
+      <div class="loc-item"><div class="loc-icon"><i class="ti ti-world" aria-hidden="true"></i></div><div><div class="loc-label">Site web</div><div class="loc-val">luxaven.ma</div></div></div>
+      <button class="loc-map-btn"><i class="ti ti-map" style="font-size:15px" aria-hidden="true"></i> Ouvrir dans Google Maps</button>
+    </div>
+  </div>
+</div>
+
+<footer id="contact">
+  <div>
+    <div class="foot-logo"><span>L</span>UXAVEN</div>
+    <div class="foot-desc">Agence de location de voitures à Rabat. Véhicules récents, assurés et entretenus. Service professionnel depuis Rabat Agdal.</div>
+    <div class="foot-social">
+      <div class="soc-btn"><i class="ti ti-brand-instagram" aria-hidden="true"></i></div>
+      <div class="soc-btn"><i class="ti ti-brand-facebook" aria-hidden="true"></i></div>
+      <div class="soc-btn"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i></div>
+    </div>
+  </div>
+  <div class="foot-col">
+    <h4>Navigation</h4>
+    <a onclick="scrollTo(0,0)">Accueil</a>
+    <a onclick="document.getElementById('fleet').scrollIntoView({behavior:'smooth'})">Notre flotte</a>
+    <a onclick="document.getElementById('loc').scrollIntoView({behavior:'smooth'})">Localisation</a>
+    <a onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact</a>
+  </div>
+  <div class="foot-col">
+    <h4>Contact</h4>
+    <a>06 61 47 25 59</a>
+    <a>+212 718 998 998</a>
+    <a>MAG N°10, AV Hassan II, Rabat</a>
+    <a>luxaven.ma</a>
+  </div>
+</footer>
+<div class="foot-bottom">
+  <p>© 2026 Luxaven Rent a Car · Rabat, Maroc</p>
+  <span>Tous droits réservés</span>
+</div>
+
+<script>
+const cars=[
+  {name:'Renault Clio 2024',meta:'Citadine · Automatique · Essence',price:600,avail:true,tr:'Automatique',se:'5 places',fu:'Essence',rt:'4.5 · 12 avis',desc:'Idéale pour la ville et escapades week-end. Économique, facile à garer à Rabat. Bluetooth, GPS et assurance complète inclus.'},
+  {name:'Dacia Duster 2023',meta:'SUV · Manuelle · Diesel',price:500,avail:true,tr:'Manuelle',se:'5 places',fu:'Diesel',rt:'5.0 · 7 avis',desc:'Robuste et spacieuse. Route de montagne, piste, désert — elle passe partout. Notre voiture la plus demandée pour l\'Atlas.'},
+  {name:'Peugeot 208 2022',meta:'Citadine · Automatique · Essence',price:450,avail:false,tr:'Automatique',se:'5 places',fu:'Essence',rt:'4.0 · 9 avis',desc:'Compacte et agile. Excellente visibilité. Très appréciée pour naviguer dans la médina et le centre-ville de Rabat.'},
+  {name:'Volkswagen Golf 2023',meta:'Berline · Automatique · Essence',price:750,avail:true,tr:'Automatique',se:'5 places',fu:'Essence',rt:'4.7 · 5 avis',desc:'Berline premium silencieuse. Toit panoramique, sièges chauffants. Parfaite pour voyages d\'affaires ou familles.'},
+  {name:'Hyundai Tucson 2024',meta:'SUV · Automatique · Diesel',price:850,avail:true,tr:'Automatique',se:'5 places',fu:'Diesel',rt:'4.3 · 4 avis',desc:'SUV moderne et confortable. Parfait pour familles et longs trajets. Équipement haut de gamme complet.'},
+  {name:'Kia Picanto 2024',meta:'Citadine · Manuelle · Essence',price:380,avail:true,tr:'Manuelle',se:'4 places',fu:'Essence',rt:'5.0 · 11 avis',desc:'Le meilleur rapport qualité/prix. Ultra-économique, très faible consommation. Parfaite pour Rabat et Salé.'},
+  {name:'Toyota Corolla 2023',meta:'Berline · Automatique · Hybride',price:680,avail:true,tr:'Automatique',se:'5 places',fu:'Hybride',rt:'4.6 · 8 avis',desc:'Fiabilité légendaire Toyota. Hybride très économique. Confort et économie réunis pour tous vos trajets.'},
+  {name:'BMW X1 2023',meta:'SUV Premium · Automatique · Essence',price:920,avail:false,tr:'Automatique',se:'5 places',fu:'Essence',rt:'5.0 · 3 avis',desc:'Le summum du luxe chez Luxaven. Intérieur cuir, BMW ConnectedDrive. Pour les occasions exceptionnelles.'},
+];
+
+let carPrice=600,sv=0;
+
+function setGalImg(idx){
+  const imgs=window._curImgs||[];
+  if(!imgs[idx])return;
+  document.getElementById('gal-main-img').src=imgs[idx];
+  document.querySelectorAll('.gth').forEach((t,j)=>t.classList.toggle('on',j===idx));
+  document.getElementById('gal-count').innerHTML='<i class="ti ti-photo" style="font-size:11px"></i> '+(idx+1)+'/'+imgs.length;
+}
+
+function openCar(i){
+  const c=cars[i];
+  document.getElementById('dn').textContent=c.name;
+  document.getElementById('dm').textContent=c.meta;
+  document.getElementById('dp').innerHTML=c.price+' MAD <span>/ jour</span>';
+  document.getElementById('drt').textContent=c.rt;
+  document.getElementById('dtr').textContent=c.tr;
+  document.getElementById('dse').textContent=c.se;
+  document.getElementById('dfu').textContent=c.fu;
+  document.getElementById('dde').textContent=c.desc;
+  document.getElementById('scar').textContent=c.name;
+  document.getElementById('srate').textContent=c.price+' MAD/j';
+  carPrice=c.price;
+  // Set gallery images
+  window._curImgs=c.imgs||[];
+  document.getElementById('gal-main-img').src=c.imgs?c.imgs[0]:'';
+  for(let k=0;k<4;k++){const th=document.getElementById('gth'+k);if(th&&c.imgs&&c.imgs[k])th.src=c.imgs[k];}
+  document.querySelectorAll('.gth').forEach((t,j)=>t.classList.toggle('on',j===0));
+  document.getElementById('gal-count').innerHTML='<i class="ti ti-photo" style="font-size:11px"></i> 1/'+c.imgs.length;
+  const da=document.getElementById('da');
+  if(c.avail){da.innerHTML='<i class="ti ti-circle-check" style="font-size:13px"></i> Disponible maintenant';da.className='det-avail av';}
+  else{da.innerHTML='<i class="ti ti-clock" style="font-size:13px"></i> Actuellement louée';da.className='det-avail na';}
+  document.getElementById('det').classList.add('on');
+  document.getElementById('conf').classList.remove('on');
+  document.getElementById('det').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function closeDet(){
+  document.getElementById('det').classList.remove('on');
+  document.getElementById('fleet').scrollIntoView({behavior:'smooth'});
+}
+
+function goHome(){
+  document.getElementById('det').classList.remove('on');
+  document.getElementById('conf').classList.remove('on');
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+function calcT(){
+  const f=document.getElementById('rf').value,t=document.getElementById('rt').value;
+  if(f&&t){
+    const d=Math.max(1,Math.round((new Date(t)-new Date(f))/86400000));
+    document.getElementById('sdur').textContent=d+' jour'+(d>1?'s':'');
+    document.getElementById('stot').textContent=(d*carPrice).toLocaleString()+' MAD';
+  }
+}
+
+function doConfirm(){
+  document.getElementById('det').classList.remove('on');
+  document.getElementById('cref').textContent=String(Math.floor(Math.random()*9000+1000));
+  document.getElementById('conf').classList.add('on');
+  document.getElementById('conf').scrollIntoView({behavior:'smooth'});
+}
+
+function runSearch(){
+  const m=document.getElementById('s-model').value.toLowerCase();
+  const cat=document.getElementById('s-cat').value.toLowerCase();
+  document.querySelectorAll('.car-card').forEach(c=>{
+    const n=c.querySelector('.card-name').textContent.toLowerCase();
+    const ccat=c.dataset.cat;
+    const matchM=!m||n.includes(m);
+    const matchC=!cat||ccat===cat||cat==='';
+    c.style.display=(matchM&&matchC)?'':'none';
+  });
+  document.getElementById('fleet').scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('filt').querySelectorAll('.fb').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));this.classList.add('on');
+  const f=this.dataset.f;
+  document.querySelectorAll('.car-card').forEach(c=>{
+    if(f==='all')c.style.display='';
+    else if(f==='disponible')c.style.display=c.dataset.avail==='true'?'':'none';
+    else c.style.display=c.dataset.cat===f?'':'none';
+  });
+}));
+
+const track=document.getElementById('ct');
+let drag=false,sx=0,sl=0,mv=false;
+track.parentElement.addEventListener('mousedown',e=>{drag=true;sx=e.pageX;sl=parseFloat(track.style.transform?.replace(/[^-\d.]/g,'')||0)||0;mv=false;track.classList.add('dragging')});
+document.addEventListener('mousemove',e=>{if(!drag)return;mv=true;const dx=e.pageX-sx;const nx=Math.min(0,Math.max(-(track.scrollWidth-track.parentElement.offsetWidth+96),sl+dx));track.style.transform=`translateX(${nx}px)`;});
+document.addEventListener('mouseup',e=>{if(!drag)return;drag=false;track.classList.remove('dragging');if(!mv){const c=e.target.closest('.car-card');if(c)openCar(+c.dataset.i);}});
+
+const dots=document.getElementById('cdots');
+cars.forEach((_,i)=>{const d=document.createElement('div');d.className='cdot'+(i===0?' on':'');d.onclick=()=>{const w=258;track.style.transform=`translateX(-${i*w}px)`;document.querySelectorAll('.cdot').forEach((x,j)=>x.classList.toggle('on',j===i));};dots.appendChild(d);});
+
+const sr=document.getElementById('sr');
+sr.querySelectorAll('i').forEach(s=>{
+  s.addEventListener('mouseenter',()=>{const v=+s.dataset.v;sr.querySelectorAll('i').forEach((x,j)=>x.classList.toggle('on',j<v));});
+  s.addEventListener('click',()=>{sv=+s.dataset.v;});
+  s.addEventListener('mouseleave',()=>{sr.querySelectorAll('i').forEach((x,j)=>x.classList.toggle('on',j<sv));});
+});
+
+function postRev(btn){
+  const n=document.querySelector('.rinp').value.trim()||'Anonyme';
+  const t=document.querySelector('.rta').value.trim();if(!t)return;
+  const stars=Array.from({length:5},(_,i)=>`<i class="ti ti-star" style="font-size:12px;color:${i<sv?'#e74c3c':'#1a1a1a'}" aria-hidden="true"></i>`).join('');
+  const ini=n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const el=document.createElement('div');el.className='rev-item';
+  el.innerHTML=`<div class="rev-head"><div class="rev-auth"><div class="rev-av">${ini}</div><div><div class="rev-name">${n}</div><div class="rev-date">À l'instant</div></div></div><div class="rev-stars">${stars}</div></div><div class="rev-text">${t}</div>`;
+  document.getElementById('rl').appendChild(el);
+  document.querySelector('.rinp').value='';document.querySelector('.rta').value='';sv=0;
+  sr.querySelectorAll('i').forEach(x=>x.classList.remove('on'));
+  btn.textContent='Publié !';setTimeout(()=>btn.textContent='Publier l\'avis',2000);
+}
+
+document.querySelectorAll('.gth').forEach(t=>t.addEventListener('click',function(){document.querySelectorAll('.gth').forEach(x=>x.classList.remove('on'));this.classList.add('on');}));
+
+const wc=document.getElementById('wc');
+const ctx=wc.getContext('2d');
+let t2=0;
+function resizeWC(){wc.width=wc.parentElement.offsetWidth||800;wc.height=600;}
+resizeWC();
+
+function drawWaves(){
+  ctx.clearRect(0,0,wc.width,wc.height);
+  for(let i=0;i<5;i++){
+    ctx.beginPath();
+    ctx.moveTo(0,wc.height);
+    for(let x=0;x<=wc.width;x+=4){
+      const y=wc.height*0.4+Math.sin((x/wc.width)*Math.PI*3+t2+i*0.8)*60+Math.sin((x/wc.width)*Math.PI*6+t2*1.3)*25+i*40;
+      ctx.lineTo(x,y);
+    }
+    ctx.lineTo(wc.width,wc.height);ctx.lineTo(0,wc.height);ctx.closePath();
+    const a=0.03-i*0.005;
+    ctx.fillStyle=`rgba(192,57,43,${a})`;
+    ctx.fill();
+  }
+  t2+=0.008;
+  requestAnimationFrame(drawWaves);
+}
+drawWaves();
+
+const wv=document.getElementById('wv');
+const wctx=wv.getContext('2d');
+let t3=0;
+function resizeWV(){wv.width=wv.parentElement?.offsetWidth||800;wv.height=100;}
+resizeWV();
+function drawWave2(){
+  wctx.clearRect(0,0,wv.width,wv.height);
+  for(let i=0;i<3;i++){
+    wctx.beginPath();wctx.moveTo(0,wv.height);
+    for(let x=0;x<=wv.width;x+=3){
+      const y=50+Math.sin((x/wv.width)*Math.PI*4+t3+i)*20+Math.sin((x/wv.width)*Math.PI*8+t3*1.5)*8;
+      wctx.lineTo(x,y);
+    }
+    wctx.lineTo(wv.width,wv.height);wctx.lineTo(0,wv.height);wctx.closePath();
+    wctx.fillStyle=`rgba(192,57,43,${0.06-i*0.015})`;wctx.fill();
+  }
+  t3+=0.012;requestAnimationFrame(drawWave2);
+}
+drawWave2();
+</script>
+<script>
+function openCar(i) {
+  const cars = [
+    { name: 'Renault Clio', price: '600 MAD/j', cat: 'Citadine', year: '2024', fuel: 'Essence', trans: 'Automatique', seats: 5, img: 'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=80', desc: 'Idéale pour la ville. Économique, facile à garer. Bluetooth, GPS et assurance inclus.', avail: true },
+    { name: 'Dacia Duster', price: '500 MAD/j', cat: 'SUV', year: '2023', fuel: 'Diesel', trans: 'Manuelle', seats: 5, img: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80', desc: 'Robuste et spacieuse. Idéale pour l\'Atlas et les pistes. Notre voiture la plus demandée.', avail: true },
+    { name: 'Peugeot 208', price: '450 MAD/j', cat: 'Citadine', year: '2022', fuel: 'Essence', trans: 'Automatique', seats: 5, img: 'https://images.unsplash.com/photo-1617531653332-bd46c16f7d5d?w=800&q=80', desc: 'Compacte et agile. Excellente visibilité, confort en ville.', avail: false },
+    { name: 'Volkswagen Golf', price: '750 MAD/j', cat: 'Berline', year: '2023', fuel: 'Essence', trans: 'Automatique', seats: 5, img: 'https://images.unsplash.com/photo-1471444928139-48c5bf5173f8?w=800&q=80', desc: 'Berline premium silencieuse. Toit panoramique, sièges chauffants.', avail: true },
+    { name: 'Hyundai Tucson', price: '850 MAD/j', cat: 'SUV', year: '2024', fuel: 'Diesel', trans: 'Automatique', seats: 5, img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80', desc: 'SUV moderne et confortable. Parfait pour familles et longs trajets.', avail: true },
+    { name: 'Kia Picanto', price: '380 MAD/j', cat: 'Citadine', year: '2024', fuel: 'Essence', trans: 'Manuelle', seats: 4, img: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&q=80', desc: 'Le meilleur rapport qualité/prix. Ultra-économique, parfaite pour Rabat et Salé.', avail: true },
+    { name: 'Toyota Corolla', price: '680 MAD/j', cat: 'Berline', year: '2023', fuel: 'Hybride', trans: 'Automatique', seats: 5, img: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&q=80', desc: 'Fiabilité légendaire Toyota. Hybride, très faible conso.', avail: true },
+    { name: 'BMW X1', price: '920 MAD/j', cat: 'SUV Premium', year: '2023', fuel: 'Essence', trans: 'Automatique', seats: 5, img: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80', desc: 'Le summum du luxe. Intérieur cuir, technologie BMW ConnectedDrive.', avail: false }
+  ];
+  const c = cars[i];
+  document.getElementById('car-modal-img').src = c.img;
+  document.getElementById('car-modal-name').textContent = c.name;
+  document.getElementById('car-modal-price').textContent = c.price;
+  document.getElementById('car-modal-cat').textContent = c.cat + ' · ' + c.year + ' · ' + c.trans;
+  document.getElementById('car-modal-fuel').textContent = c.fuel + ' · ' + c.seats + ' places';
+  document.getElementById('car-modal-desc').textContent = c.desc;
+  document.getElementById('car-modal-avail').textContent = c.avail ? '✅ Disponible' : '🔴 Louée';
+  document.getElementById('car-modal-btn').style.display = c.avail ? 'inline-block' : 'none';
+  document.getElementById('car-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeCarModal() {
+  document.getElementById('car-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeCarModal(); });
+</script>
+
+<div id="car-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:20px;" onclick="closeCarModal()">
+  <div style="background:#181818;border-radius:16px;max-width:560px;width:100%;overflow:hidden;position:relative;" onclick="event.stopPropagation()">
+    <button onclick="closeCarModal()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;z-index:2;">✕</button>
+    <img id="car-modal-img" src="" style="width:100%;height:240px;object-fit:cover;">
+    <div style="padding:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div id="car-modal-name" style="font-size:22px;font-weight:700;color:#fff;"></div>
+        <div id="car-modal-price" style="color:#c0392b;font-weight:700;font-size:18px;"></div>
+      </div>
+      <div id="car-modal-cat" style="color:#aaa;font-size:13px;margin-bottom:4px;"></div>
+      <div id="car-modal-fuel" style="color:#aaa;font-size:13px;margin-bottom:12px;"></div>
+      <div id="car-modal-avail" style="font-size:14px;margin-bottom:12px;"></div>
+      <div id="car-modal-desc" style="color:#ccc;font-size:14px;line-height:1.6;margin-bottom:20px;"></div>
+      <a id="car-modal-btn" href="https://wa.me/212661472559" target="_blank" style="display:inline-block;background:#c0392b;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">Réserver sur WhatsApp →</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
