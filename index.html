@@ -719,6 +719,12 @@ footer{
   transform:translateX(5px);color:var(--white);
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SB_URL = 'https://eispsoxzfttmcgmfxgjl.supabase.co';
+  const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpc3Bzb3h6ZnR0bWNnbWZ4Z2psIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NjUwNTgsImV4cCI6MjA5ODM0MTA1OH0.YYXxWEx1Cxt-ahJa9C81Qkvih6uzTFdKt1VkXobNfUM';
+  const sb = supabase.createClient(SB_URL, SB_ANON_KEY);
+</script>
 </head>
 <body>
 
@@ -840,7 +846,7 @@ footer{
   <div class="hero-grad"></div>
   <div class="hero-content">
     <div class="hero-eyebrow">Location de voitures · Rabat</div>
-    <h1 class="hero-h1">Louez<br><em>l'exception</em></h1>
+    <h1 class="hero-h1">Louez<br> <em>l'exception</em></h1>
     <p class="hero-sub">Véhicules récents, assurance incluse, livraison à Rabat. Réservation en quelques minutes.</p>
     <div class="hero-actions">
       <button class="btn-primary" onclick="showFleet()">
@@ -891,7 +897,7 @@ footer{
       <div class="cc-label">WhatsApp</div>
       <div class="cc-value">+212 718 990 998</div>
     </a>
-    <a href="https://www.instagram.com/luxavenlocation/" target="_blank" class="contact-card">
+    <a href="https://www.instagram.com/luxaven.ma" target="_blank" class="contact-card">
       <div class="cc-icon">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
       </div>
@@ -972,11 +978,19 @@ footer{
     <h1>Notre <em>Flotte</em></h1>
     <p>Tous nos véhicules disponibles à Rabat Agdal</p>
   </div>
+  <div style="max-width:420px;margin:0 auto 24px;padding:0 20px">
+    <input
+      type="text"
+      id="fleetSearchInput"
+      placeholder="Rechercher un véhicule (ex: BMW, SUV...)"
+      oninput="onFleetSearch()"
+      style="width:100%;background:var(--g2);border:1px solid var(--g3);color:var(--white);
+             padding:12px 16px;font-size:13px;font-family:inherit;border-radius:4px;outline:none"
+    >
+  </div>
   <div class="fleet-pg-controls" id="fleetPgControls">
     <button class="ff on" data-fp="all">Tous</button>
-    <button class="ff" data-fp="citadine">Citadine</button>
-    <button class="ff" data-fp="suv">SUV</button>
-    <button class="ff" data-fp="berline">Berline</button>
+    <div id="fleetFilterDynamic" style="display:contents"></div>
   </div>
   <div class="fleet-pg-grid">
     <div class="car-grid" id="fleetGrid"></div>
@@ -1018,7 +1032,7 @@ footer{
         <div class="f-row">
           <div>
             <label class="f-label">Date de départ</label>
-            <input class="f-input" id="bStart" type="date" onchange="calcBook()">
+            <input class="f-input" id="bStart" type="date" onchange="calcBook()" oninput="updateEndMin()">
           </div>
           <div>
             <label class="f-label">Date de retour</label>
@@ -1028,10 +1042,6 @@ footer{
         <label class="f-label">Lieu de livraison</label>
         <select class="f-select" id="bLieu">
           <option value="">Choisir...</option>
-          <option>Hôtel (Rabat)</option>
-          <option>Aéroport Mohammed V</option>
-          <option>Adresse personnelle (Rabat)</option>
-          <option>Adresse personnelle (Salé)</option>
         </select>
         <label class="f-label">Message (optionnel)</label>
         <input class="f-input" id="bMsg" type="text" placeholder="Besoin particulier ?">
@@ -1063,80 +1073,34 @@ footer{
 
 <script>
 /* ─── DATA ─── */
-const CARS = [
-  {name:'Renault Clio',year:'2024',cat:'Citadine',trans:'Automatique',fuel:'Essence',seats:5,price:600,avail:true,
-   imgs:[
-    'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=1200&q=85',
-    'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=1200&q=85',
-    'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=1200&q=85',
-    'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&q=85'
-   ],
-   desc:'Idéale pour la ville. Économique et facile à garer. Bluetooth, GPS et assurance tous risques inclus. La voiture parfaite pour explorer Rabat et ses environs.',
-   feats:['Bluetooth','GPS','Assurance incluse','Climatisation','Kilométrage illimité','Livraison Rabat']},
-  {name:'Dacia Duster',year:'2023',cat:'SUV',trans:'Manuelle',fuel:'Diesel',seats:5,price:500,avail:true,
-   imgs:[
-    'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&q=85',
-    'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200&q=85',
-    'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1200&q=85',
-    'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1200&q=85'
-   ],
-   desc:'Robuste et spacieuse. Idéale pour l\'Atlas et les pistes marocaines. Notre véhicule le plus demandé par les aventuriers et les familles.',
-   feats:['4×4','Galerie de toit','GPS','Assurance incluse','Climatisation','Kilométrage illimité']},
-  {name:'Peugeot 208',year:'2022',cat:'Citadine',trans:'Automatique',fuel:'Essence',seats:5,price:450,avail:false,
-   imgs:[
-    'https://images.unsplash.com/photo-1617531653332-bd46c16f7d5d?w=1200&q=85',
-    'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=1200&q=85',
-    'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=1200&q=85',
-    'https://images.unsplash.com/photo-1471444928139-48c5bf5173f8?w=1200&q=85'
-   ],
-   desc:'Compacte et agile. Excellente visibilité, grand confort en ville. Très appréciée pour se déplacer dans Rabat et ses quartiers.',
-   feats:['Climatisation','Bluetooth','Caméra de recul','Assurance incluse']},
-  {name:'Volkswagen Golf',year:'2023',cat:'Berline',trans:'Automatique',fuel:'Essence',seats:5,price:750,avail:true,
-   imgs:[
-    'https://images.unsplash.com/photo-1471444928139-48c5bf5173f8?w=1200&q=85',
-    'https://images.unsplash.com/photo-1617531653332-bd46c16f7d5d?w=1200&q=85',
-    'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&q=85',
-    'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=1200&q=85'
-   ],
-   desc:'Berline premium silencieuse. Toit panoramique, sièges chauffants. Idéale pour voyages d\'affaires et longs trajets confortables.',
-   feats:['Toit panoramique','Sièges chauffants','GPS','Climatisation','Bluetooth','Assurance incluse']},
-  {name:'Hyundai Tucson',year:'2024',cat:'SUV',trans:'Automatique',fuel:'Diesel',seats:5,price:850,avail:true,
-   imgs:[
-    'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1200&q=85',
-    'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&q=85',
-    'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200&q=85',
-    'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1200&q=85'
-   ],
-   desc:'SUV moderne et confortable. Parfait pour les familles et les longs trajets. Équipement haut de gamme, 7 airbags de série.',
-   feats:['4×4','Toit panoramique','GPS','Climatisation','7 airbags','Kilométrage illimité']},
-  {name:'Kia Picanto',year:'2024',cat:'Citadine',trans:'Manuelle',fuel:'Essence',seats:4,price:380,avail:true,
-   imgs:[
-    'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=1200&q=85',
-    'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=1200&q=85',
-    'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=1200&q=85',
-    'https://images.unsplash.com/photo-1617531653332-bd46c16f7d5d?w=1200&q=85'
-   ],
-   desc:'Le meilleur rapport qualité/prix de notre flotte. Ultra-économique, parfaite pour Rabat et Salé. Livraison offerte dans tout Rabat.',
-   feats:['Climatisation','Bluetooth','Assurance incluse','Livraison gratuite']},
-  {name:'Toyota Corolla',year:'2023',cat:'Berline',trans:'Automatique',fuel:'Hybride',seats:5,price:680,avail:true,
-   imgs:[
-    'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&q=85',
-    'https://images.unsplash.com/photo-1471444928139-48c5bf5173f8?w=1200&q=85',
-    'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=1200&q=85',
-    'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=1200&q=85'
-   ],
-   desc:'Fiabilité légendaire Toyota. Hybride, très faible consommation. Idéale pour les trajets Rabat–Casablanca ou Rabat–Marrakech.',
-   feats:['Hybride','GPS','Climatisation','Bluetooth','Caméra 360°','Assurance incluse']},
-  {name:'BMW X1',year:'2023',cat:'SUV Premium',trans:'Automatique',fuel:'Essence',seats:5,price:920,avail:false,
-   imgs:[
-    'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1200&q=85',
-    'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1200&q=85',
-    'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&q=85',
-    'https://images.unsplash.com/photo-1471444928139-48c5bf5173f8?w=1200&q=85'
-   ],
-   desc:'Le summum du luxe. Intérieur cuir Nappa, technologie BMW ConnectedDrive. Une expérience unique sur les routes du Maroc.',
-   feats:['Cuir Nappa','ConnectedDrive','Toit panoramique','GPS','Sièges chauffants','Clim bi-zone']},
-];
+let CARS = [];
+
+async function loadCarsFromSupabase(){
+  const { data, error } = await sb
+    .from('vehicles')
+    .select('*')
+    .order('created_at', { ascending: true });
+  if(error){
+    console.error('Erreur chargement véhicules:', error);
+    CARS = [];
+    return;
+  }
+  CARS = (data || []).map(v => ({
+    id: v.id,
+    name: v.name,
+    year: String(v.year),
+    cat: v.category,
+    trans: v.transmission,
+    fuel: v.fuel,
+    seats: v.seats,
+    price: v.price_per_day,
+    avail: v.status === 'available',
+    homepage: v.show_on_homepage,
+    imgs: (v.images && v.images.length) ? v.images : ['https://images.unsplash.com/photo-1502877338535-766e1452684a?w=1200&q=85'],
+    desc: v.description || '',
+    feats: []
+  }));
+}
 
 /* ── RESERVATIONS STORE (admin will read these) ── */
 let RESERVATIONS = JSON.parse(localStorage.getItem('lx_reservations')||'[]');
@@ -1172,8 +1136,9 @@ function carCardHTML(c, i){
 function renderHomeCars(){
   const grid = document.getElementById('carGrid');
   if(!grid) return;
-  // Show all 8 cars + a "voir tout" card as 9th cell
-  const cards = CARS.map((c,i) => carCardHTML(c,i)).join('');
+  // Show only vehicles flagged show_on_homepage in admin dashboard
+  const homepageCars = CARS.filter(c => c.homepage);
+  const cards = homepageCars.map(c => carCardHTML(c, CARS.indexOf(c))).join('');
   const viewAll = `
   <div class="car-item-wide-cta" onclick="showFleet()">
     <span class="vaf-wide-text">Voir toute la flotte</span>
@@ -1182,14 +1147,28 @@ function renderHomeCars(){
   grid.innerHTML = cards + viewAll;
 }
 
+let currentFleetFilter = 'all';
+
 function renderFleetCars(filter='all'){
+  currentFleetFilter = filter;
   const grid = document.getElementById('fleetGrid');
   if(!grid) return;
-  const filtered = filter==='all'
+  let filtered = filter==='all'
     ? CARS
     : CARS.filter(c => c.cat.toLowerCase().includes(filter));
+
+  const searchInput = document.getElementById('fleetSearchInput');
+  const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+  if(q){
+    filtered = filtered.filter(c =>
+      (c.name && c.name.toLowerCase().includes(q)) ||
+      (c.cat && c.cat.toLowerCase().includes(q)) ||
+      (String(c.year || '').includes(q))
+    );
+  }
+
   if(filtered.length===0){
-    grid.innerHTML = '<div class="fleet-pg-empty">Aucun véhicule dans cette catégorie.</div>';
+    grid.innerHTML = '<div class="fleet-pg-empty">Aucun véhicule ne correspond à votre recherche.</div>';
     return;
   }
   grid.innerHTML = filtered.map((c) => {
@@ -1198,8 +1177,43 @@ function renderFleetCars(filter='all'){
   }).join('');
 }
 
+function onFleetSearch(){
+  renderFleetCars(currentFleetFilter);
+}
+
+async function loadDeliveryLocations(){
+  try{
+    const { data: locs, error } = await sb.from('delivery_locations').select('name').order('name');
+    if(error || !locs) return;
+    const sel = document.getElementById('bLieu');
+    if(!sel) return;
+    sel.innerHTML = '<option value="">Choisir...</option>' +
+      locs.map(l => `<option>${l.name}</option>`).join('');
+  }catch(e){ console.error('loadDeliveryLocations failed', e); }
+}
+
+async function loadCategoryFilters(){
+  try{
+    const { data: cats, error } = await sb.from('categories').select('name').order('name');
+    if(error || !cats) return;
+    const wrap = document.getElementById('fleetFilterDynamic');
+    if(!wrap) return;
+    wrap.innerHTML = cats.map(c =>
+      `<button class="ff" data-fp="${c.name.toLowerCase()}">${c.name}</button>`
+    ).join('');
+    wrap.querySelectorAll('.ff').forEach(btn=>{
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('#fleetPgControls .ff').forEach(b=>b.classList.remove('on'));
+        this.classList.add('on');
+        renderFleetCars(this.dataset.fp);
+      });
+    });
+  }catch(e){ console.error('loadCategoryFilters failed', e); }
+}
+
 /* ─── NAV HELPERS ─── */
 function showHome(){
+  location.hash = '#/';
   document.getElementById('page-home').style.display='block';
   document.getElementById('page-car').style.display='none';
   document.getElementById('page-fleet').style.display='none';
@@ -1207,10 +1221,14 @@ function showHome(){
   renderHomeCars();
 }
 function showFleet(){
+  location.hash = '#/flotte';
   document.getElementById('page-home').style.display='none';
   document.getElementById('page-car').style.display='none';
   document.getElementById('page-fleet').style.display='flex';
   window.scrollTo(0,0);
+  loadCategoryFilters();
+  const searchInput = document.getElementById('fleetSearchInput');
+  if(searchInput) searchInput.value = '';
   renderFleetCars('all');
   // reset filters
   document.querySelectorAll('#fleetPgControls .ff').forEach(b=>{
@@ -1219,6 +1237,8 @@ function showFleet(){
 }
 function showCar(i){
   const c = CARS[i];
+  if(!c) { showHome(); return; }
+  location.hash = '#/voiture/' + i;
   window.scrollTo(0,0);
   document.getElementById('page-home').style.display='none';
   document.getElementById('page-fleet').style.display='none';
@@ -1262,7 +1282,20 @@ function showCar(i){
   document.getElementById('bSummary').style.display='none';
   ['bName','bPhone','bEmail','bStart','bEnd','bMsg'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('bLieu').value='';
+  const todayStr = new Date().toISOString().split('T')[0];
+  document.getElementById('bStart').min = todayStr;
+  document.getElementById('bEnd').min = todayStr;
   currentCarIdx = i;
+}
+
+function updateEndMin(){
+  const s = document.getElementById('bStart').value;
+  const endInput = document.getElementById('bEnd');
+  const todayStr = new Date().toISOString().split('T')[0];
+  endInput.min = s || todayStr;
+  if(endInput.value && s && endInput.value < s){
+    endInput.value = '';
+  }
 }
 
 let currentCarIdx = 0;
@@ -1280,6 +1313,10 @@ function calcBook(){
   const s=document.getElementById('bStart').value;
   const e=document.getElementById('bEnd').value;
   if(!s||!e)return;
+  if(e<s){
+    document.getElementById('bSummary').style.display='none';
+    return;
+  }
   const days=Math.max(1,Math.round((new Date(e)-new Date(s))/86400000));
   const c=CARS[currentCarIdx];
   const tot=(days*c.price).toLocaleString('fr-FR');
@@ -1288,7 +1325,7 @@ function calcBook(){
   document.getElementById('bsDays').textContent=days+' jour'+(days>1?'s':'');
   document.getElementById('bsTotal').textContent=tot+' MAD';
 }
-function submitBooking(){
+async function submitBooking(){
   const name=document.getElementById('bName').value.trim();
   const phone=document.getElementById('bPhone').value.trim();
   const start=document.getElementById('bStart').value;
@@ -1297,21 +1334,44 @@ function submitBooking(){
   if(!name||!phone||!start||!end||!lieu){
     alert('Merci de remplir tous les champs obligatoires.');return;
   }
+
+  // Date validation: no past dates, end must not be before start
+  const todayStr = new Date().toISOString().split('T')[0];
+  if(start < todayStr){
+    alert('La date de départ ne peut pas être dans le passé. Merci de choisir une date valide.');
+    return;
+  }
+  if(end < start){
+    alert('La date de retour ne peut pas être avant la date de départ.');
+    return;
+  }
   const c=CARS[currentCarIdx];
-  const days=Math.max(1,Math.round((new Date(end)-new Date(start))/86400000));
-  const total=(days*c.price).toLocaleString('fr-FR');
-  const resa={
-    id:'RES-'+Date.now(),
-    timestamp:new Date().toISOString(),
-    status:'pending',
-    car:c.name+' '+c.year,
-    carIdx:currentCarIdx,
-    client:{name,phone,email:document.getElementById('bEmail').value,message:document.getElementById('bMsg').value},
-    dates:{start,end,days},
-    lieu,total:total+' MAD',prixJour:c.price
-  };
-  RESERVATIONS.push(resa);
-  localStorage.setItem('lx_reservations',JSON.stringify(RESERVATIONS));
+  const email=document.getElementById('bEmail').value.trim();
+  const msgRaw=document.getElementById('bMsg').value.trim();
+  const fullMessage = (lieu ? ('Lieu de récupération: '+lieu+(msgRaw?' — ':'')) : '') + msgRaw;
+
+  const submitBtn=document.getElementById('bookSubmitBtn');
+  if(submitBtn){ submitBtn.disabled=true; submitBtn.textContent='Envoi en cours...'; }
+
+  const { error } = await sb.from('reservations').insert({
+    vehicle_id: c.id,
+    client_name: name,
+    client_phone: phone,
+    client_email: email,
+    start_date: start,
+    end_date: end,
+    message: fullMessage,
+    status: 'pending'
+  });
+
+  if(submitBtn){ submitBtn.disabled=false; submitBtn.textContent='Confirmer la demande'; }
+
+  if(error){
+    console.error('Erreur réservation:', error);
+    alert("Une erreur est survenue lors de l'envoi de votre demande. Merci de réessayer ou de nous contacter directement.");
+    return;
+  }
+
   document.getElementById('bookForm').style.display='none';
   document.getElementById('bookSuccess').style.display='block';
 }
@@ -1349,7 +1409,23 @@ document.querySelectorAll('#fleetPgControls .ff').forEach(btn=>{
 /* homepage filter removed - no longer needed */
 
 /* ─── INIT ─── */
-renderHomeCars();
+function routeFromHash(){
+  const hash = location.hash.replace(/^#\/?/, '');
+  if (hash.startsWith('voiture/')) {
+    const idx = parseInt(hash.split('/')[1], 10);
+    if (!isNaN(idx) && CARS[idx]) { showCar(idx); return; }
+  }
+  if (hash === 'flotte') { showFleet(); return; }
+  showHome();
+}
+window.addEventListener('hashchange', routeFromHash);
+
+(async function initApp(){
+  await loadCarsFromSupabase();
+  renderHomeCars();
+  loadDeliveryLocations();
+  routeFromHash();
+})();
 
 /* ─── MOBILE MENU ─── */
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
