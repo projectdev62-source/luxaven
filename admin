@@ -1002,9 +1002,11 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
   btn.textContent = 'Enregistrer';
 
   if (error) {
-    showToast('Erreur lors de l\'enregistrement', 'error');
-    return;
-  }
+  console.error(error);
+  alert(JSON.stringify(error, null, 2));
+  showToast(error.message, 'error');
+  return;
+}
   SETTINGS = payload;
   showToast('Paramètres enregistrés');
 });
